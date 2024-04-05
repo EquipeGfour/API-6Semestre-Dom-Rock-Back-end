@@ -8,3 +8,4 @@ class Docs(Base):
     document_name = Column(String(255), nullable=False)
     size = Column(String(50), nullable=False)
     uploaded_at = Column(TIMESTAMP, nullable=False, default=func.now())
+    link = Column(String(255), nullable=False)
