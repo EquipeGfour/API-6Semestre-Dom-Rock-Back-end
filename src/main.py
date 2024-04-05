@@ -41,6 +41,13 @@ def get_doc_id(doc_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Document not found")
     return doc
 
+@app.get("/getdoc")
+def get_doc(db: Session = Depends(get_db)):
+    doc = db.query(Docs).all()
+    print(doc)
+    if doc is None:
+        raise HTTPException(status_code=404, detail="Documents not found")
+    return doc
 
 @app.post("/docs/preprocessing/{doc_id}")
 def create_preprocessing(doc_id: int, preprocessing_data: PreprocessingInput, db: Session = Depends(get_db)):
@@ -58,10 +65,19 @@ def create_preprocessing(doc_id: int, preprocessing_data: PreprocessingInput, db
     db.commit()
     return {"message": "Preprocessing data inserted successfully"}
 
+@app.get("/docs/preprocessing/{doc_id}")
+def get_preprocessing(doc_id: int, db: Session = Depends(get_db)):
+    doc = db.query(Docs).filter(Docs.id == doc_id).first()
+    preprocessings = db.query(Preprocessing).filter(Preprocessing.doc_id == doc_id).all()
+    if doc is None:
+        raise HTTPException(status_code=404, detail="Document not found")
+    return preprocessings
+
 @app.get("/")
 def read_root():
     return "is running..."
 
 if __name__ == "__main__":
+    print("------------Banco de dados conectado com sucesso!!!------------")
     port = int(config._g.get("application", "port",fallback=8000))
     run("main:app", host="0.0.0.0", port= port, log_level="debug", reload=True)
