@@ -10,3 +10,4 @@ typing_extensions==4.10.*
 uvicorn==0.29.*
 SQLAlchemy==2.0.*
 pymysql==1.1.*
+sqlalchemy==2.0.*

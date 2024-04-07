@@ -1,14 +1,10 @@
-from http.client import HTTPException
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from uvicorn import run
-from models.docs import Docs
-from models.preprocessing import Preprocessing
 from utils.config import Config
 from db.db import engine
 from models.base import Base
-from db.db import SessionLocal
-from sqlalchemy.orm import Session
-from schemas.schemas import InputDoc, PreprocessingInput
+from routes import doc_router, preprocessing_router
+
 
 config = Config()
 
@@ -20,62 +16,13 @@ app = FastAPI(title=project_name, version=project_version)
 def create_tables():
     Base.metadata.create_all(bind=engine)
 
-def get_db():
-    db = SessionLocal()  
-    try:
-        yield db
-    finally:
-        db.close()
-
-@app.post("/docs")
-def create_doc(data:InputDoc,db: Session = Depends(get_db)):
-    new_doc = Docs(document_name = data.name,size = data.size,link = data.link)
-    db.add(new_doc)
-    db.commit()
-    return {"message": "Document created successfully"}
-
-@app.get("/docs/{doc_id}")
-def get_doc_id(doc_id: int, db: Session = Depends(get_db)):
-    doc = db.query(Docs).filter(Docs.id == doc_id).first()
-    if doc is None:
-        raise HTTPException(status_code=404, detail="Document not found")
-    return doc
-
-@app.get("/getdoc")
-def get_doc(db: Session = Depends(get_db)):
-    doc = db.query(Docs).all()
-    print(doc)
-    if doc is None:
-        raise HTTPException(status_code=404, detail="Documents not found")
-    return doc
-
-@app.post("/docs/preprocessing/{doc_id}")
-def create_preprocessing(doc_id: int, preprocessing_data: PreprocessingInput, db: Session = Depends(get_db)):
-    doc = db.query(Docs).filter(Docs.id == doc_id).first()
-    if doc is None:
-        raise HTTPException(status_code=404, detail="Document not found")
-    new_preprocessing = Preprocessing(
-        input=preprocessing_data.input,
-        output=preprocessing_data.output,
-        step=preprocessing_data.step,
-        doc_id=doc_id,
-        processing_time=preprocessing_data.processing_time
-    )
-    db.add(new_preprocessing)
-    db.commit()
-    return {"message": "Preprocessing data inserted successfully"}
-
-@app.get("/docs/preprocessing/{doc_id}")
-def get_preprocessing(doc_id: int, db: Session = Depends(get_db)):
-    doc = db.query(Docs).filter(Docs.id == doc_id).first()
-    preprocessings = db.query(Preprocessing).filter(Preprocessing.doc_id == doc_id).all()
-    if doc is None:
-        raise HTTPException(status_code=404, detail="Document not found")
-    return preprocessings
-
 @app.get("/")
 def read_root():
     return "is running..."
+
+app.include_router(doc_router, prefix="/document", tags=["document"])
+app.include_router(preprocessing_router, prefix="/preprocessing", tags=["preprocessing"])
+
 
 if __name__ == "__main__":
     print("------------Banco de dados conectado com sucesso!!!------------")

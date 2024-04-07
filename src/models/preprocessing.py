@@ -2,6 +2,7 @@ from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, String
 from models.base_class import Base
 from sqlalchemy.sql import func
 
+
 class Preprocessing(Base):
     __tablename__ = 'preprocessing'
     id = Column(Integer, primary_key=True)

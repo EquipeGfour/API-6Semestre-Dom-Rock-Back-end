@@ -14,8 +14,7 @@ class Config():
         return self._g
 
     def _init_config_parser(self) -> ConfigParser:
-        path = getcwd().replace("src","") + self._file
+        path = getcwd().replace("src","") + "\\" + self._file
         config = ConfigParser()
         config.read(path)
         return config
-    
