@@ -21,7 +21,7 @@ def read_root():
     return "is running..."
 
 app.include_router(doc_router, prefix="/document", tags=["document"])
-app.include_router(preprocessing_router, prefix="/preprocessing", tags=["preprocessing"])
+app.include_router(preprocessing_router, prefix="/pre-processing", tags=["preprocessing"])
 
 
 if __name__ == "__main__":
