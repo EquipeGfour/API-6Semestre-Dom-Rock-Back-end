@@ -11,3 +11,6 @@ class PreprocessingInput(BaseModel):
     output:str
     step:str
     processing_time:int
+
+class LexicoInput(BaseModel):
+    text:str
