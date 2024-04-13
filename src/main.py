@@ -3,7 +3,7 @@ from uvicorn import run
 from utils.config import Config
 from db.db import engine
 from models.base import Base
-from routes import doc_router, preprocessing_router
+from routes import doc_router, preprocessing_router, lexico_router
 
 
 config = Config()
@@ -22,6 +22,7 @@ def read_root():
 
 app.include_router(doc_router, prefix="/document", tags=["document"])
 app.include_router(preprocessing_router, prefix="/pre-processing", tags=["preprocessing"])
+app.include_router(lexico_router, prefix="/lexico", tags=["lexico"])
 
 
 if __name__ == "__main__":

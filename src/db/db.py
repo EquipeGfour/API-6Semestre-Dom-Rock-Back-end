@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from models.docs import Base
 from models.preprocessing import Base
+from models.lexicos import Base
 
 config = Config()
 
