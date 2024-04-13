@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import run
 from utils.config import Config
 from db.db import engine
@@ -12,6 +13,13 @@ project_name = config._g.get("application", "project_name",fallback='service-nib
 project_version = config._g.get("application", "PROJECT_VERSION",fallback='0.0.0')
 
 app = FastAPI(title=project_name, version=project_version)
+app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[str(origin) for origin in ["http://localhost:8000","https://localhost:8000","http://localhost:3000","http://localhost","https://localhost"]],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 def create_tables():
     Base.metadata.create_all(bind=engine)

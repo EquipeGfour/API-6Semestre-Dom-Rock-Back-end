@@ -1,5 +1,5 @@
 from secrets import token_hex
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from db.db import get_db
 from sqlalchemy.orm import Session
 from modules.doc import Doc
@@ -11,8 +11,8 @@ import os
 router = APIRouter()
 
 
-@router.post("/inserir", description="Rota para inserir as informações do arquivo enviados via upload")
-async def create_doc(file: UploadFile = File(...), db: Session = Depends(get_db)):
+@router.post("/inserir", description="Rota para inserir as informações do arquivo enviados via upload", status_code=200)
+async def create_doc(file: UploadFile = File(...), db: Session = Depends(get_db), response:Response = 200):
     file_ext = file.filename.split(".")[-1]
     file_path = f"uploads/{file.filename}"
     os.makedirs("uploads", exist_ok=True)
@@ -26,7 +26,8 @@ async def create_doc(file: UploadFile = File(...), db: Session = Depends(get_db)
     )
     db.add(new_doc)
     db.commit()
-    return {"message": "Documento criado com sucesso"}
+    db.refresh(new_doc)  # Atualiza o objeto new_doc com as informações do banco de dados
+    return new_doc
 
 
 @router.get("/get", description="Rota para buscar as informações de um documento por id")
