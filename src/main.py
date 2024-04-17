@@ -4,7 +4,7 @@ from uvicorn import run
 from utils.config import Config
 from db.db import engine
 from models.base import Base
-from routes import doc_router, preprocessing_router, lexico_router
+from routes import dataset_router, preprocessing_historic_router, corpus_router
 
 
 config = Config()
@@ -28,9 +28,9 @@ def create_tables():
 def read_root():
     return "is running..."
 
-app.include_router(doc_router, prefix="/document", tags=["document"])
-app.include_router(preprocessing_router, prefix="/pre-processing", tags=["preprocessing"])
-app.include_router(lexico_router, prefix="/lexico", tags=["lexico"])
+app.include_router(dataset_router, prefix="/dataset", tags=["dataset"])
+app.include_router(preprocessing_historic_router, prefix="/pre-processing", tags=["preprocessing"])
+app.include_router(corpus_router, prefix="/corpus", tags=["corpus"])
 
 
 if __name__ == "__main__":

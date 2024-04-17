@@ -2,10 +2,10 @@ from secrets import token_hex
 from fastapi import APIRouter, Depends, Response
 from db.db import get_db
 from sqlalchemy.orm import Session
-from modules.doc import Doc
+from modules.datasets import Datasets
 from schemas.schemas import InputDoc
 from fastapi import File, UploadFile, Depends
-from models.docs import Docs
+from models.datasets import Datasets
 import os
 
 router = APIRouter()
@@ -22,8 +22,8 @@ async def create_doc(file: UploadFile = File(...), db: Session = Depends(get_db)
     with open(file_path, "wb") as f:
         content = await file.read()
         f.write(content)
-    new_doc = Docs(
-        document_name=file.filename,
+    new_doc = Datasets(
+        name=file.filename,
         size=len(content),
         link=file_path
     )
@@ -34,8 +34,8 @@ async def create_doc(file: UploadFile = File(...), db: Session = Depends(get_db)
 
 @router.get("/get", description="Rota para buscar as informações de um documento por id")
 def get_doc_by_id(doc_id: int, db: Session = Depends(get_db)):
-    return Doc().get_doc_id(doc_id, db)
+    return Datasets().get_doc_id(doc_id, db)
 
 @router.get("/all", description="Rota para buscar todas as informações dos documentos salvos")
 def get_all_docs(db: Session = Depends(get_db)):
-    return Doc().get_doc(db)
+    return Datasets().get_doc(db)
