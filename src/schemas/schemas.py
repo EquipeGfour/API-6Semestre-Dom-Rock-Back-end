@@ -15,4 +15,4 @@ class PreprocessingInput(BaseModel):
     processing_time:int
 
 class CorpusInput(BaseModel):
-    text:str
+    corpus:str

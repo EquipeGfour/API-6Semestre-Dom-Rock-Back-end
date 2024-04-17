@@ -8,5 +8,5 @@ class Datasets(Base):
     name = Column(String(255), nullable=False)
     size = Column(String(50), nullable=False)
     link = Column(String(255), nullable=False)
-    number_of_records = Column(Integer, nullable=False)
+    number_of_records = Column(Integer, nullable=True)
     uploaded_at = Column(TIMESTAMP, nullable=False, default=func.now())

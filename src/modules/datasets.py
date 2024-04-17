@@ -4,9 +4,9 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 
-class Datasets:
-    def get_dataset_id(self, doc_id: int, db: Session):
-        dataset = db.query(Datasets).filter(Datasets.id == doc_id).first()
+class DatasetsController:
+    def get_dataset_id(self, dataset_id: int, db: Session):
+        dataset = db.query(Datasets).filter(Datasets.id == dataset_id).first()
         if dataset is None:
             raise HTTPException(status_code=404, detail="Dataset not found")
         return dataset

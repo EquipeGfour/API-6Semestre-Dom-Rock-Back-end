@@ -4,12 +4,14 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 
-class Corpus:
+class CorpusController:
     def create_corpus(self, data:CorpusInput,db: Session ):
-        new_corpus = Corpus(text = data.text)
+        new_corpus = Corpus(
+            corpus = data.corpus
+            )
         db.add(new_corpus)
         db.commit()
-        return {"message": "Corpus created successfully"}
+        return new_corpus
 
 
     def get_corpus_id(self, corpus_id: int, db: Session):
