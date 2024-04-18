@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class InputDoc(BaseModel):
     name: str
     size: int
@@ -16,3 +17,9 @@ class PreprocessingInput(BaseModel):
 
 class CorpusInput(BaseModel):
     corpus:str
+
+class ReviewInput(BaseModel):
+    title: str
+    review: str
+    rating: int
+    recomend_product: bool

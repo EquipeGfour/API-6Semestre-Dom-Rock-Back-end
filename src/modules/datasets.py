@@ -1,5 +1,4 @@
 from models.datasets import Datasets
-from schemas.schemas import InputDoc
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
