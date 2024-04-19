@@ -7,6 +7,7 @@ from models.corpus import Base
 from models.users import Base
 from models.reviews import Base
 from models.process_data import Base
+from models.products import Base
 
 config = Config()
 

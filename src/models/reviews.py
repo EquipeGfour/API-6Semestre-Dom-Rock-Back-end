@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean
+from sqlalchemy import Column, ForeignKey, Integer, String, TIMESTAMP, Boolean
 from models.base_class import Base
 from sqlalchemy.sql import func
 
@@ -11,3 +11,4 @@ class Reviews(Base):
     rating = Column(Integer, nullable=False)
     recomend_product = Column(Boolean, nullable=False, default=False)
     created_at = Column(TIMESTAMP, nullable=False, default=func.now())
+    product_id = Column(ForeignKey('products.id'), nullable=False)
