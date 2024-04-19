@@ -29,6 +29,7 @@ class ReviewsController:
         )
         db.add(review)
         db.commit()
+        db.refresh(review)
         return review
 
     def _evaluate_recomend_product(self, recommend:str):

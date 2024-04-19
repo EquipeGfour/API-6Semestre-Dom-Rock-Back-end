@@ -1,15 +1,13 @@
-from secrets import token_hex
 from fastapi import APIRouter, Depends, Response
 from db.db import get_db
 from sqlalchemy.orm import Session
 from modules.datasets import DatasetsController
-from schemas.schemas import InputDoc
 from fastapi import File, UploadFile, Depends
 from models.datasets import Datasets
 import os
 
 router = APIRouter()
-# C:\API - DomRock - BackEnd\BackEnd\API-6Semestre-Dom-Rock-Back-end
+
 # Caminho absoluto para o diretório 'uploads'
 path = os.path.abspath(os.getcwd()) 
 upload_path = os.path.join(path, 'uploads')

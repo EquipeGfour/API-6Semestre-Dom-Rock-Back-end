@@ -4,8 +4,7 @@ from uvicorn import run
 from utils.config import Config
 from db.db import engine
 from models.base import Base
-from routes import dataset_router, preprocessing_historic_router, corpus_router, reviews_router,users_router
-
+from routes import dataset_router, preprocessing_historic_router, corpus_router, reviews_router,users_router, process_data_router
 
 config = Config()
 
@@ -21,8 +20,6 @@ app.add_middleware(
         allow_headers=["*"],
     )
 
-def create_tables():
-    Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def read_root():
@@ -33,6 +30,7 @@ app.include_router(preprocessing_historic_router, prefix="/pre-processing", tags
 app.include_router(corpus_router, prefix="/corpus", tags=["corpus"])
 app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(reviews_router, prefix="/review", tags=["review"])
+app.include_router(process_data_router, prefix="/process_data", tags=["process_data"])
 
 
 if __name__ == "__main__":

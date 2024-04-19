@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Union
 
 
 class InputDoc(BaseModel):
@@ -28,3 +29,8 @@ class ReviewInput(BaseModel):
     review: str
     rating: int
     recomend_product: bool
+
+class ProcessDataInput(BaseModel):
+    review_id : Union[int, None]
+    preprocessing_id : Union[int, None]
+    data: str
