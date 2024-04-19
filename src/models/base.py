@@ -3,3 +3,4 @@ from models.preprocessing_historics import PreprocessingHistorics
 from models.datasets import Datasets
 from models.corpus import Corpus
 from models.users import Users
+from models.reviews import Reviews

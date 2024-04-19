@@ -4,7 +4,7 @@ from uvicorn import run
 from utils.config import Config
 from db.db import engine
 from models.base import Base
-from routes import dataset_router, preprocessing_historic_router, corpus_router,users_router
+from routes import dataset_router, preprocessing_historic_router, corpus_router, reviews_router,users_router
 
 
 config = Config()
@@ -32,6 +32,7 @@ app.include_router(dataset_router, prefix="/dataset", tags=["dataset"])
 app.include_router(preprocessing_historic_router, prefix="/pre-processing", tags=["preprocessing"])
 app.include_router(corpus_router, prefix="/corpus", tags=["corpus"])
 app.include_router(users_router, prefix="/users", tags=["users"])
+app.include_router(reviews_router, prefix="/review", tags=["review"])
 
 
 if __name__ == "__main__":
