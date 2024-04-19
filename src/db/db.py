@@ -8,6 +8,7 @@ from models.users import Base
 from models.reviews import Base
 from models.process_data import Base
 from models.products import Base
+from models.processing_errors import Base
 
 config = Config()
 

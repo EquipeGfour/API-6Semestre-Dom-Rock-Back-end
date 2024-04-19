@@ -4,7 +4,7 @@ from uvicorn import run
 from utils.config import Config
 from db.db import engine
 from models.base import Base
-from routes import dataset_router, preprocessing_historic_router, corpus_router, reviews_router,users_router, process_data_router,products_router
+from routes import dataset_router, preprocessing_historic_router, corpus_router, reviews_router, users_router, process_data_router, products_router, processing_errors_router
 
 
 config = Config()
@@ -33,6 +33,7 @@ app.include_router(users_router, prefix="/users", tags=["users"])
 app.include_router(reviews_router, prefix="/review", tags=["review"])
 app.include_router(process_data_router, prefix="/process_data", tags=["process_data"])
 app.include_router(products_router, prefix="/products", tags=["products"])
+app.include_router(processing_errors_router, prefix="/processing_errors", tags=["processing_errors"])
 
 if __name__ == "__main__":
     print("------------Banco de dados conectado com sucesso!!!------------")

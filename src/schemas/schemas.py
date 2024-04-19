@@ -39,3 +39,7 @@ class ProductsInput(BaseModel):
     name:str
     product_id:str
     brand:str
+
+class ProcessingErrorInput(BaseModel):
+    id_preprocessing: int
+    error: str
