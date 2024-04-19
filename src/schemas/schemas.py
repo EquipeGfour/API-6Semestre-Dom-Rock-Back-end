@@ -16,3 +16,8 @@ class PreprocessingInput(BaseModel):
 
 class CorpusInput(BaseModel):
     corpus:str
+
+class UsersInput(BaseModel):
+    name:str
+    senha:str
+    email:str

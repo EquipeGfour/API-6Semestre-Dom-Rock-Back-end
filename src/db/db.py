@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from models.datasets import Base
 from models.preprocessing_historics import Base
 from models.corpus import Base
+from models.users import Base
 
 config = Config()
 
