@@ -34,3 +34,8 @@ class ProcessDataInput(BaseModel):
     review_id : Union[int, None]
     preprocessing_id : Union[int, None]
     data: str
+
+class ProductsInput(BaseModel):
+    name:str
+    product_id:str
+    brand:str

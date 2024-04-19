@@ -10,7 +10,7 @@ class UsersController:
         if user is None:
             raise HTTPException(status_code=404, detail="User not found")
         return user
-    
+
     def get_all_users(self, db: Session):
         return db.query(Users).all()
     
