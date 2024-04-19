@@ -8,4 +8,4 @@ class Users(Base):
     name = Column(String(255), nullable=False)
     email = Column(String(50), nullable=False)
     senha = Column(String(255), nullable=False)
-    uploaded_at = Column(TIMESTAMP, nullable=False, default=func.now())
+    created_at = Column(TIMESTAMP, nullable=False, default=func.now())
