@@ -9,6 +9,7 @@ class ProductsController:
         new_product = Products(
             name=product_data.name,
             product_id=product_data.product_id,
+            id_category=product_data.id_category,
             brand=product_data.brand
         )
         db.add(new_product)
