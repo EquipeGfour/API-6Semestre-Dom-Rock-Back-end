@@ -10,5 +10,6 @@ class PreprocessingHistorics(Base):
     output = Column(Text, nullable=False)
     step = Column(String(255), nullable=False)
     dataset_id = Column(ForeignKey('datasets.id'), nullable=False)
+    review_id = Column(ForeignKey('reviews.id'), nullable=True)
     processing_time = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP, nullable=False, default=func.now())
