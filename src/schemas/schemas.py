@@ -36,6 +36,7 @@ class ProcessDataInput(BaseModel):
     data: str
 
 class ProductsInput(BaseModel):
+    id_category : Union[int, None]
     name:str
     product_id:str
     brand:str
@@ -49,3 +50,10 @@ class ReviewerInput(BaseModel):
     birth_year: int
     gender: str
     state: str
+    
+class CategoryInput(BaseModel):
+    category:str
+
+class SubCategoryInput(BaseModel):
+    id_category : Union[int, None]
+    subcategory:str

@@ -7,3 +7,5 @@ from .process_data import router as process_data_router
 from .products import router as products_router
 from .processing_errors import router as processing_errors_router
 from .reviewers import router as reviewers_router
+from .category import router as category_router
+from .subcategory import router as subcategory_router
