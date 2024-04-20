@@ -7,13 +7,13 @@ router = APIRouter()
 
 
 @router.post("/insert", description="Rota para inserir uma review")
-def create_corpus(data:ReviewInput):
+def create_review(data:ReviewInput):
     return ReviewsController().insert_review(data)
 
 @router.get("/get", description="Rota para buscar uma review por id")
-def get_corpus_by_id(review_id: int):
+def get_review_by_id(review_id: int):
     return ReviewsController().get_review_id(review_id=review_id)
 
 @router.get("/all", description="Rota para buscar todos as reviews salvas")
-def get_all_corpus():
+def get_all_review():
     return ReviewsController().get_all_reviews()

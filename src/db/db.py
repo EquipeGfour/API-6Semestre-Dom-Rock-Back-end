@@ -5,11 +5,11 @@ from models.datasets import Base
 from models.preprocessing_historics import Base
 from models.corpus import Base
 from models.users import Base
+from models.reviewers import Base
+from models.products import Base
 from models.reviews import Base
 from models.process_data import Base
-from models.products import Base
 from models.processing_errors import Base
-from models.reviwers import Base
 
 config = Config()
 

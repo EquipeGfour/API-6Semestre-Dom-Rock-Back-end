@@ -11,5 +11,5 @@ class Reviews(Base):
     rating = Column(Integer, nullable=False)
     recommend_product = Column(Boolean, nullable=False, default=False)
     created_at = Column(TIMESTAMP, nullable=False, default=func.now())
-    product_id = Column(ForeignKey('products.id'), nullable=False)
-    reviewer_id = Column(ForeignKey('reviewers.id'), nullable=False)
+    product_id = Column(ForeignKey('products.id'), nullable=True)
+    reviewer_id = Column(ForeignKey('reviewers.id'), nullable=True)

@@ -25,7 +25,7 @@ class ReviewsController:
             title=review_input.title,
             review=review_input.review,
             rating=review_input.rating,
-            recomend_product=recommend
+            recommend_product=recommend
         )
         db.add(review)
         db.commit()      
@@ -33,7 +33,7 @@ class ReviewsController:
         return review
 
     def _evaluate_recomend_product(self, recommend:str):
-        if recommend == "Yes":
+        if recommend.lower() == "yes":
             return True
         else:
             return False
