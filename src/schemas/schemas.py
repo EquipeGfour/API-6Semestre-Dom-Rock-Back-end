@@ -28,7 +28,7 @@ class ReviewInput(BaseModel):
     title: str
     review: str
     rating: int
-    recomend_product: bool
+    recomend_product: str
 
 class ProcessDataInput(BaseModel):
     review_id : Union[int, None]
@@ -41,6 +41,16 @@ class ProductsInput(BaseModel):
     product_id:str
     brand:str
 
+class ProcessingErrorInput(BaseModel):
+    id_preprocessing: int
+    error: str
+
+class ReviewerInput(BaseModel):
+    reviewer_id: str
+    birth_year: int
+    gender: str
+    state: str
+    
 class CategoryInput(BaseModel):
     category:str
 

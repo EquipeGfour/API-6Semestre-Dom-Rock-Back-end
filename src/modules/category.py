@@ -11,6 +11,7 @@ class CategoryController:
             )
         db.add(new_category)
         db.commit()
+        db.refresh(new_category) 
         return new_category
 
 
