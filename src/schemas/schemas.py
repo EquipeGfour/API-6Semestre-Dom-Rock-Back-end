@@ -43,3 +43,9 @@ class ProductsInput(BaseModel):
 class ProcessingErrorInput(BaseModel):
     id_preprocessing: int
     error: str
+
+class ReviwerInput(BaseModel):
+    reviewer_id: str
+    birth_year: int
+    gender: str
+    state: str
