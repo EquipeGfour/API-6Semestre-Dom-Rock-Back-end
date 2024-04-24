@@ -8,5 +8,5 @@ from models.preprocessing_historics import PreprocessingHistorics
 from models.products import Products
 from models.processing_errors import ProcessingError
 from models.reviewers import Reviewers
-from models.categories import Category
+from models.categories import Categories
 from models.subcategories import SubCategories
