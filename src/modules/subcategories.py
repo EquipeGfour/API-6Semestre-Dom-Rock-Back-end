@@ -1,15 +1,15 @@
-from models.subcategory import SubCategory
+from models.subcategories import SubCategories
 from schemas.schemas import SubCategoryInput
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from db.db import SessionLocal
 
 
-class SubCategoryController:
+class SubCategoriesController:
     def create_subcategory(self, subcategory_data: SubCategoryInput):
         db = SessionLocal()
         try:
-            subcategory = SubCategory(
+            subcategory = SubCategories(
                 id_category=subcategory_data.id_category,
                 subcategory=subcategory_data.subcategory
             )
@@ -26,7 +26,7 @@ class SubCategoryController:
 
     def get_subcategory_data_by_id(self, subcategory_id: int):
         db = SessionLocal()
-        subcategory_data = db.query(SubCategory).filter(SubCategory.id == subcategory_id).first()
+        subcategory_data = db.query(SubCategories).filter(SubCategories.id == subcategory_id).first()
         
         if subcategory_data is None:
             raise HTTPException(status_code=404, detail="Subcategory not found")
@@ -36,7 +36,7 @@ class SubCategoryController:
 
     def get_all_subcategory_datas(self):
         db = SessionLocal()
-        datas = db.query(SubCategory).all()
+        datas = db.query(SubCategories).all()
         if datas is None:
             raise HTTPException(status_code=404, detail="Subcategorys not found")
         return datas

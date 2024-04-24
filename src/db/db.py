@@ -10,8 +10,8 @@ from models.products import Base
 from models.reviews import Base
 from models.process_data import Base
 from models.processing_errors import Base
-from models.category import Base
-from models.subcategory import Base
+from models.categories import Base
+from models.subcategories import Base
 
 config = Config()
 

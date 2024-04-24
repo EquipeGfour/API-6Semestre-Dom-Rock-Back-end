@@ -1,10 +1,10 @@
-from models.category import Category
+from models.categories import Category
 from schemas.schemas import CategoryInput
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 
-class CategoryController:
+class CategoriesController:
     def create_category(self, data:CategoryInput,db: Session ):
         new_category = Category(
             category = data.category
