@@ -17,3 +17,7 @@ def get_review_by_id(review_id: int):
 @router.get("/all", description="Rota para buscar todos as reviews salvas")
 def get_all_review():
     return ReviewsController().get_all_reviews()
+
+@router.get("/product_rating/{product_id}", description="Route to get the average rating of a product")
+def get_product_rating(product_id: int):
+    return ReviewsController().get_product_rating(product_id)

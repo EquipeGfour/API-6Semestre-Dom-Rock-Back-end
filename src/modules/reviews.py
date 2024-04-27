@@ -2,7 +2,7 @@ from db.db import SessionLocal
 from models.reviews import Reviews
 from fastapi import HTTPException
 from schemas.schemas import ReviewInput
-
+from sqlalchemy import func
 
 
 class ReviewsController:
@@ -37,3 +37,21 @@ class ReviewsController:
             return True
         else:
             return False
+        
+    def get_product_rating(self, product_id: int):
+        db = SessionLocal()
+
+        # Verificar se existem avaliações para o produto em questão
+        count_reviews = db.query(Reviews).filter(Reviews.product_id == product_id).count()
+        print(count_reviews)
+        if count_reviews == 0:
+            raise HTTPException(status_code=404, detail="Não existe esse produto")
+
+        # Calcular a média das avaliações do produto
+        avg_rating = db.query(func.avg(Reviews.rating)).filter(Reviews.product_id == product_id).scalar()
+        db.close()
+
+        if avg_rating is None:
+            raise HTTPException(status_code=404, detail="Não há notas para esse produto")
+        
+        return avg_rating
