@@ -1,11 +1,17 @@
 from db.db import SessionLocal
 from models.reviews import Reviews
+from models.reviewers import Reviewers
 from fastapi import HTTPException
 from schemas.schemas import ReviewInput
 from sqlalchemy import func
+from modules.reviewers import ReviewerController
 
 
 class ReviewsController:
+
+    def __init__(self) -> None:
+        self._reviewers_controller = ReviewerController()
+
     def get_all_reviews(self):
         db = SessionLocal()
         reviews = db.query(Reviews).all()
@@ -55,3 +61,39 @@ class ReviewsController:
             raise HTTPException(status_code=404, detail="Não há notas para esse produto")
         
         return avg_rating
+    
+    def get_all_reviews_number(self):
+        try:
+            db = SessionLocal()
+
+            count_all_reviews = db.query(Reviews).count()
+            print(count_all_reviews)
+            if count_all_reviews == 0:
+                msg = f"[ERROR] - ReviewsController >> Reviews not found"
+                raise HTTPException(status_code = 404, detail = msg)
+            return count_all_reviews
+        except Exception as e:
+            msg = f"[ERROR] - ReviewsController >> Fail to get the count of reviews into database, {str(e)}"
+            raise HTTPException(status_code = 500, detail = msg)
+        finally:
+            db.close()
+
+    def filter_all_reviewers_by_state(self, state:str):
+        try:
+            db = SessionLocal()
+            reviews = db.query(Reviews).join(Reviewers, Reviewers.id == Reviews.reviewer_id, isouter=True).filter(Reviewers.state == state).all()
+            num_of_reviews = len(reviews)
+            rating = 0
+            for review in reviews:
+                rating += review.rating
+            formatted_num = "{:.2f}".format(rating/num_of_reviews)
+            response_obj = {
+                "num_of_reviews": num_of_reviews,
+                "rating": float(formatted_num)
+            }
+            return response_obj
+        except Exception as e:
+            msg = f"[ERROR] - ReviewsController >> Fail to get the count of reviews by state into database, {str(e)}"
+            raise HTTPException(status_code = 500, detail = msg)
+        finally:
+            db.close()
