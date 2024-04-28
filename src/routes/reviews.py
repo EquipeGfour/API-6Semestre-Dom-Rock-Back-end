@@ -18,6 +18,14 @@ def get_review_by_id(review_id: int):
 def get_all_review():
     return ReviewsController().get_all_reviews()
 
-@router.get("/product_rating/{product_id}", description="Route to get the average rating of a product")
+@router.get("/product_rating", description="Route to get the average rating of a product")
 def get_product_rating(product_id: int):
     return ReviewsController().get_product_rating(product_id)
+
+@router.get("/get-all-reviews", description="Rota para buscar a quantidade de reviews")
+def get_all_reviews_count():
+    return ReviewsController().get_all_reviews_number()
+
+@router.get("/get-all-reviews-state", description="Rota para buscar a quantidade de reviews por estado")
+def reviews_by_state(state:str):
+    return ReviewsController().filter_all_reviewers_by_state(state)
