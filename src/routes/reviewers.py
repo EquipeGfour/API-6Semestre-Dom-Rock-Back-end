@@ -20,3 +20,12 @@ def get_reviewer_by_id(reviewer_id: int, db: Session = Depends(get_db)):
     if not reviewer:
         raise HTTPException(status_code=404, detail="Reviewer not found")
     return reviewer
+
+
+@router.get("/get_top5_statesReviews", description="Route to fetch the top 5 states and their reviews count")
+def get_top5_states_reviews(db: Session = Depends(get_db)):
+    top_states_reviews = ReviewerController().get_top5_states_by_reviews(db)  # Corrigido o nome do método
+    if not top_states_reviews:
+        raise HTTPException(status_code=404, detail="Top 5 states not found")
+    return top_states_reviews
+
