@@ -12,5 +12,5 @@ def insert_preprocessing_register(dataset_id: int, preprocessing_data: Preproces
     return PreprocessingHistoricsController().insert_register(dataset_id, preprocessing_data, db)
 
 @router.get("/get", description="Rota para buscar o ultimo registro de pré-processamento")
-def get_preprocessing_register(dataset_id: int, db: Session = Depends(get_db)):
-    return PreprocessingHistoricsController().get_register(dataset_id, db)
+def get_preprocessing_register(dataset_id: int):
+    return PreprocessingHistoricsController().get_register(dataset_id)
