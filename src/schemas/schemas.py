@@ -24,6 +24,10 @@ class UsersInput(BaseModel):
     senha:str
     email:str
 
+class LoginInput(BaseModel):
+    email: str
+    senha: str
+
 class ReviewInput(BaseModel):
     title: str
     review: str

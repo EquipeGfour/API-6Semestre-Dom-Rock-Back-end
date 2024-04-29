@@ -3,6 +3,7 @@ from db.db import get_db
 from sqlalchemy.orm import Session
 from schemas.schemas import UsersInput
 from modules.users import UsersController
+from schemas.schemas import LoginInput
 
 router = APIRouter()
 
@@ -25,3 +26,7 @@ def update_user(user_id: int, user_data: UsersInput, db: Session = Depends(get_d
 @router.delete("/delete", description="Rota para excluir um usuário pelo ID")
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     return UsersController().delete_user(user_id, db)
+
+@router.post("/login", description="Rota para fazer login")
+def login(user_data: LoginInput, db: Session = Depends(get_db)):
+    return UsersController().login(user_data, db)
