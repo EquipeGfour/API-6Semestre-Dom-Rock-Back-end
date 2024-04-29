@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
 from db.db import get_db
 from schemas.schemas import UsersInput
+from schemas.schemas import LoginInput
 
 class UsersController:
     def get_user(self, user_id: int, db: Session = Depends(get_db)):
@@ -15,6 +16,9 @@ class UsersController:
         return db.query(Users).all()
     
     def insert_user(self, user_data: UsersInput, db: Session = Depends(get_db)):
+        existing_user = db.query(Users).filter(Users.email == user_data.email).first()
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
         new_user = Users(
             name=user_data.name,
             senha=user_data.senha,
@@ -42,3 +46,9 @@ class UsersController:
         db.delete(user)
         db.commit()
         return {"message": "User deleted successfully"}
+    
+    def login(self, login_data: LoginInput, db: Session = Depends(get_db)):
+        user = db.query(Users).filter(Users.email == login_data.email).first()
+        if user is None or user.senha != login_data.senha:
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+        return {"user": user, "message": "Login successful"}
