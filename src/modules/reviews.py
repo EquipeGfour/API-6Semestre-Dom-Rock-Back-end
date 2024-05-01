@@ -5,11 +5,14 @@ from fastapi import HTTPException
 from schemas.schemas import ReviewInput
 from sqlalchemy import func
 from modules.reviewers import ReviewerController
+from models.products import Products
+from models.preprocessing_historics import PreprocessingHistorics
+from modules.preprocessing_historics import PreprocessingHistoricsController
 
 
 class ReviewsController:
-
     def __init__(self) -> None:
+        self._preprocessing_controller = PreprocessingHistoricsController()
         self._reviewers_controller = ReviewerController()
 
     def get_all_reviews(self):
@@ -46,21 +49,25 @@ class ReviewsController:
         
     def get_product_rating(self, product_id: int):
         db = SessionLocal()
-
-        # Verificar se existem avaliações para o produto em questão
-        count_reviews = db.query(Reviews).filter(Reviews.product_id == product_id).count()
-        print(count_reviews)
-        if count_reviews == 0:
-            raise HTTPException(status_code=404, detail="Não existe esse produto")
-
         # Calcular a média das avaliações do produto
-        avg_rating = db.query(func.avg(Reviews.rating)).filter(Reviews.product_id == product_id).scalar()
+        count_reviews, avg_rating = db.query(
+            func.count(Reviews.product_id),func.avg(Reviews.rating)
+            ).join(Products, Reviews.product_id == Products.id).filter(
+                Products.product_id == product_id
+                ).first()
+        
+        historics = db.query(PreprocessingHistorics
+            ).join(Reviews, Reviews.id == PreprocessingHistorics.review_id
+            ).join(Products, Reviews.product_id == Products.id
+            ).filter(Products.product_id == product_id
+                ).all()
+        
+        reviews_types = self._preprocessing_controller.count_review_types(historics)
+        
         db.close()
-
         if avg_rating is None:
             raise HTTPException(status_code=404, detail="Não há notas para esse produto")
-        
-        return avg_rating
+        return {"avg_rating": avg_rating, "num_of_reviews": count_reviews, "reviews_types": reviews_types}
     
     def get_all_reviews_number(self):
         try:
@@ -81,7 +88,22 @@ class ReviewsController:
     def filter_all_reviewers_by_state(self, state:str):
         try:
             db = SessionLocal()
-            reviews = db.query(Reviews).join(Reviewers, Reviewers.id == Reviews.reviewer_id, isouter=True).filter(Reviewers.state == state).all()
+            reviews = db.query(
+                Reviews
+                ).join(
+                    Reviewers, Reviewers.id == Reviews.reviewer_id, isouter=True
+                ).filter(
+                    Reviewers.state == state
+                ).all()
+            
+            historics = db.query(PreprocessingHistorics
+            ).join(Reviews, Reviews.id == PreprocessingHistorics.review_id
+            ).join(Reviewers, Reviews.reviewer_id == Reviewers.id
+            ).filter(Reviewers.state == state
+                ).all()
+            
+            reviews_types = self._preprocessing_controller.count_review_types(historics)
+
             num_of_reviews = len(reviews)
             rating = 0
             for review in reviews:
@@ -89,7 +111,8 @@ class ReviewsController:
             formatted_num = "{:.2f}".format(rating/num_of_reviews)
             response_obj = {
                 "num_of_reviews": num_of_reviews,
-                "rating": float(formatted_num)
+                "avg_rating": float(formatted_num),
+                "reviews_types": reviews_types
             }
             return response_obj
         except Exception as e:
