@@ -65,14 +65,16 @@ class PreprocessingHistoricsController:
 
             process_objs.append(process_obj)
         return process_objs
-    
+
     def count_review_types(self, processings: List[PreprocessingHistorics]):
-        reviews = self.build_process_object(processings)
+        if len(processings) == 0:
+            return {"positive": 0, "negative": 0, "neutral": 0}
         review_counts = {
             "positive": 0,
             "negative": 0,
             "neutral": 0
         }
+        reviews = self.build_process_object(processings)
         for review in reviews:
             if review["review_type"] == "positive":
                 review_counts["positive"] += 1

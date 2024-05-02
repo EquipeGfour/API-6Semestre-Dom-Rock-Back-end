@@ -66,7 +66,7 @@ class ReviewsController:
         
         db.close()
         if avg_rating is None:
-            raise HTTPException(status_code=404, detail="Não há notas para esse produto")
+            avg_rating = 0
         return {"avg_rating": avg_rating, "num_of_reviews": count_reviews, "reviews_types": reviews_types}
     
     def get_all_reviews_number(self):
@@ -93,22 +93,23 @@ class ReviewsController:
                 ).join(
                     Reviewers, Reviewers.id == Reviews.reviewer_id, isouter=True
                 ).filter(
-                    Reviewers.state == state
+                    Reviewers.state == state.upper()
                 ).all()
             
             historics = db.query(PreprocessingHistorics
             ).join(Reviews, Reviews.id == PreprocessingHistorics.review_id
             ).join(Reviewers, Reviews.reviewer_id == Reviewers.id
-            ).filter(Reviewers.state == state
+            ).filter(Reviewers.state == state.upper()
                 ).all()
             
-            reviews_types = self._preprocessing_controller.count_review_types(historics)
-
             num_of_reviews = len(reviews)
+            formatted_num = 0.0
             rating = 0
-            for review in reviews:
-                rating += review.rating
-            formatted_num = "{:.2f}".format(rating/num_of_reviews)
+            reviews_types = self._preprocessing_controller.count_review_types(historics)
+            if num_of_reviews != 0: 
+                for review in reviews:
+                    rating += review.rating
+                formatted_num = "{:.2f}".format(rating/num_of_reviews)          
             response_obj = {
                 "num_of_reviews": num_of_reviews,
                 "avg_rating": float(formatted_num),
@@ -117,6 +118,7 @@ class ReviewsController:
             return response_obj
         except Exception as e:
             msg = f"[ERROR] - ReviewsController >> Fail to get the count of reviews by state into database, {str(e)}"
+            print(msg)
             raise HTTPException(status_code = 500, detail = msg)
         finally:
             db.close()
