@@ -41,3 +41,9 @@ class SubCategoriesController:
             raise HTTPException(status_code=404, detail="Subcategorys not found")
         return datas
 
+    def get_all_subcategory_by_category_id(self, id_category: int):
+        db = SessionLocal()
+        subcategories = db.query(SubCategories).filter(SubCategories.id_category == id_category).all()
+        if subcategories is None:
+            raise HTTPException(status_code=404, detail="Subcategorys not found")
+        return subcategories

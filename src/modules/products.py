@@ -1,8 +1,11 @@
 from models.products import Products
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
-from db.db import get_db
+from db.db import get_db, SessionLocal
 from schemas.schemas import ProductsInput
+from models.categories import Categories
+from models.subcategories import SubCategories
+
 
 class ProductsController:
     def create_product(self, product_data: ProductsInput, db: Session = Depends(get_db)):
@@ -25,3 +28,20 @@ class ProductsController:
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
         return product
+
+
+    def get_all_products_by_category(self, id_category: int):
+        db = SessionLocal()
+        products = db.query(Products).join(
+            Categories, Products.id_category == Categories.id).filter(
+                Categories.id == id_category).all()
+        return products
+
+
+    def get_all_products_by_subcategories(self, id_subcategory: int):
+        db = SessionLocal()
+        products = db.query(Products).join(
+            Categories, Products.id_category == Categories.id).join(
+                SubCategories, SubCategories.id_category == Categories.id).filter(
+                    SubCategories.id == id_subcategory).all()
+        return products

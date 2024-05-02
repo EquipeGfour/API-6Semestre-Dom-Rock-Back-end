@@ -17,3 +17,12 @@ def get_all_products(db: Session = Depends(get_db)):
 @router.get("/get", description="Route to fetch a product by ID")
 def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
     return ProductsController().get_product_by_id(product_id, db)
+
+
+@router.get("/all-by-category")
+def get_all_by_category(id_category: int):
+    return ProductsController().get_all_products_by_category(id_category)
+
+@router.get("/all-by-subcategory")
+def get_all_by_subcategory(id_subcategory: int):
+    return ProductsController().get_all_products_by_subcategories(id_subcategory)

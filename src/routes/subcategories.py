@@ -17,3 +17,7 @@ def get_subcategory_by_id(subcategory_id: int):
 @router.get("/all", description="Rota para buscar todas as subcategorias")
 def get_all_subcategory():
     return SubCategoriesController().get_all_subcategory_datas()
+
+@router.get("/all-by-category")
+def get_all_sub_by_category_id(id_category: int):
+    return SubCategoriesController().get_all_subcategory_by_category_id(id_category)
