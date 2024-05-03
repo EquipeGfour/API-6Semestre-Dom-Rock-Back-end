@@ -4,7 +4,7 @@ from uvicorn import run
 from utils.config import Config
 from db.db import engine
 from models.base import Base
-from routes import doc_router, preprocessing_router, lexico_router
+from routes import dataset_router, preprocessing_historic_router, corpus_router, reviews_router,users_router, process_data_router, products_router, category_router, subcategory_router, processing_errors_router, reviewers_router
 
 
 config = Config()
@@ -21,17 +21,22 @@ app.add_middleware(
         allow_headers=["*"],
     )
 
-def create_tables():
-    Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def read_root():
     return "is running..."
 
-app.include_router(doc_router, prefix="/document", tags=["document"])
-app.include_router(preprocessing_router, prefix="/pre-processing", tags=["preprocessing"])
-app.include_router(lexico_router, prefix="/lexico", tags=["lexico"])
-
+app.include_router(dataset_router, prefix="/dataset", tags=["dataset"])
+app.include_router(preprocessing_historic_router, prefix="/pre-processing", tags=["preprocessing"])
+app.include_router(corpus_router, prefix="/corpus", tags=["corpus"])
+app.include_router(users_router, prefix="/users", tags=["users"])
+app.include_router(reviews_router, prefix="/review", tags=["review"])
+app.include_router(process_data_router, prefix="/process_data", tags=["process_data"])
+app.include_router(products_router, prefix="/products", tags=["products"])
+app.include_router(processing_errors_router, prefix="/processing_errors", tags=["processing_errors"])
+app.include_router(reviewers_router, prefix="/reviewers", tags=["reviewers"])
+app.include_router(category_router, prefix="/category", tags=["category"])
+app.include_router(subcategory_router, prefix="/subcategory", tags=["subcategory"])
 
 if __name__ == "__main__":
     print("------------Banco de dados conectado com sucesso!!!------------")
