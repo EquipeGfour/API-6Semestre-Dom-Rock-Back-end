@@ -16,30 +16,45 @@ class ReviewsController:
         self._reviewers_controller = ReviewerController()
 
     def get_all_reviews(self):
-        db = SessionLocal()
-        reviews = db.query(Reviews).all()
-        return reviews
+        try:
+            db = SessionLocal()
+            reviews = db.query(Reviews).all()
+            return reviews
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.close()
 
     def get_review_id(self, review_id: int):
-        db = SessionLocal()
-        review = db.query(Reviews).filter(Reviews.id == review_id).first()
-        if review is None:
-            raise HTTPException(status_code=404, detail="Review not found")
-        return review
+        try:
+            db = SessionLocal()
+            review = db.query(Reviews).filter(Reviews.id == review_id).first()
+            if review is None:
+                raise HTTPException(status_code=404, detail="Review not found")
+            return review
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.close()
 
     def insert_review(self, review_input: ReviewInput):
-        db = SessionLocal()
-        recommend = self._evaluate_recomend_product(review_input.recomend_product)
-        review = Reviews(
-            title=review_input.title,
-            review=review_input.review,
-            rating=review_input.rating,
-            recommend_product=recommend
-        )
-        db.add(review)
-        db.commit()      
-        db.refresh(review)                              
-        return review
+        try:
+            db = SessionLocal()
+            recommend = self._evaluate_recomend_product(review_input.recomend_product)
+            review = Reviews(
+                title=review_input.title,
+                review=review_input.review,
+                rating=review_input.rating,
+                recommend_product=recommend
+            )
+            db.add(review)
+            db.commit()      
+            db.refresh(review)                              
+            return review
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.close()
 
     def _evaluate_recomend_product(self, recommend:str):
         if recommend.lower() == "yes":
@@ -48,26 +63,31 @@ class ReviewsController:
             return False
         
     def get_product_rating(self, product_id: int):
-        db = SessionLocal()
-        # Calcular a média das avaliações do produto
-        count_reviews, avg_rating = db.query(
-            func.count(Reviews.product_id),func.avg(Reviews.rating)
-            ).join(Products, Reviews.product_id == Products.id).filter(
-                Products.product_id == product_id
-                ).first()
-        
-        historics = db.query(PreprocessingHistorics
-            ).join(Reviews, Reviews.id == PreprocessingHistorics.review_id
-            ).join(Products, Reviews.product_id == Products.id
-            ).filter(Products.product_id == product_id
-                ).all()
-        
-        reviews_types = self._preprocessing_controller.count_review_types(historics)
-        
-        db.close()
-        if avg_rating is None:
-            avg_rating = 0
-        return {"avg_rating": avg_rating, "num_of_reviews": count_reviews, "reviews_types": reviews_types}
+        try:
+            db = SessionLocal()
+            # Calcular a média das avaliações do produto
+            count_reviews, avg_rating = db.query(
+                func.count(Reviews.product_id),func.avg(Reviews.rating)
+                ).join(Products, Reviews.product_id == Products.id).filter(
+                    Products.product_id == product_id
+                    ).first()
+            
+            historics = db.query(PreprocessingHistorics
+                ).join(Reviews, Reviews.id == PreprocessingHistorics.review_id
+                ).join(Products, Reviews.product_id == Products.id
+                ).filter(Products.product_id == product_id
+                    ).all()
+            
+            reviews_types = self._preprocessing_controller.count_review_types(historics)
+            
+            if avg_rating is None:
+                avg_rating = 0
+            return {"avg_rating": avg_rating, "num_of_reviews": count_reviews, "reviews_types": reviews_types}
+        except Exception as e:
+            msg = f"[ERROR] - ReviewsController >> Fail to get the product rating, {str(e)}"
+            raise HTTPException(status_code = 500, detail = msg)
+        finally:
+            db.close()
     
     def get_all_reviews_number(self):
         try:

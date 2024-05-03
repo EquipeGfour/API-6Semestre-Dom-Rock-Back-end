@@ -31,17 +31,27 @@ class ProductsController:
 
 
     def get_all_products_by_category(self, id_category: int):
-        db = SessionLocal()
-        products = db.query(Products).join(
-            Categories, Products.id_category == Categories.id).filter(
-                Categories.id == id_category).all()
-        return products
+        try:
+            db = SessionLocal()
+            products = db.query(Products).join(
+                Categories, Products.id_category == Categories.id).filter(
+                    Categories.id == id_category).all()
+            return products
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.close()
 
 
     def get_all_products_by_subcategories(self, id_subcategory: int):
-        db = SessionLocal()
-        products = db.query(Products).join(
-            Categories, Products.id_category == Categories.id).join(
-                SubCategories, SubCategories.id_category == Categories.id).filter(
-                    SubCategories.id == id_subcategory).all()
-        return products
+        try:
+            db = SessionLocal()
+            products = db.query(Products).join(
+                Categories, Products.id_category == Categories.id).join(
+                    SubCategories, SubCategories.id_category == Categories.id).filter(
+                        SubCategories.id == id_subcategory).all()
+            return products
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.close()

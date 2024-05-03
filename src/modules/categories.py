@@ -5,7 +5,7 @@ from fastapi import HTTPException
 
 
 class CategoriesController:
-    def create_category(self, data:CategoryInput,db: Session ):
+    def create_category(self, data:CategoryInput, db: Session ):
         new_category = Categories(
             category = data.category
             )
