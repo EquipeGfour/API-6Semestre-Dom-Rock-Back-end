@@ -29,3 +29,5 @@ def get_db() -> SessionLocal: # type: ignore
         yield db
     finally:
         db.close()
+
+        
