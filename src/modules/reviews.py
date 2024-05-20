@@ -8,6 +8,8 @@ from modules.reviewers import ReviewerController
 from models.products import Products
 from models.preprocessing_historics import PreprocessingHistorics
 from modules.preprocessing_historics import PreprocessingHistoricsController
+from sqlalchemy.sql import func
+
 
 
 class ReviewsController:
@@ -140,5 +142,38 @@ class ReviewsController:
             msg = f"[ERROR] - ReviewsController >> Fail to get the count of reviews by state into database, {str(e)}"
             print(msg)
             raise HTTPException(status_code = 500, detail = msg)
+        finally:
+            db.close()
+
+    def get_top_4_states_by_review_count():
+        try:
+            db = SessionLocal()
+            
+            # Query para contar reviews por estado
+            state_review_counts = db.query(
+                Reviewers.state,
+                func.count(Reviews.id).label('review_count')
+            ).join(
+                Reviews, Reviews.reviewer_id == Reviewers.id
+            ).group_by(
+                Reviewers.state
+            ).order_by(
+                func.count(Reviews.id).desc()
+            ).limit(4).all()
+            
+            if not state_review_counts:
+                raise HTTPException(status_code=404, detail="No reviews found")
+
+            top_states = [
+                {"state": state_review[0], "review_count": state_review[1]}
+                for state_review in state_review_counts
+            ]
+
+            return top_states
+
+        except Exception as e:
+            msg = f"[ERROR] - Fail to get top 4 states by review count from database, {str(e)}"
+            print(msg)
+            raise HTTPException(status_code=500, detail=msg)
         finally:
             db.close()

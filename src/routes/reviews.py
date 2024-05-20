@@ -29,3 +29,7 @@ def get_all_reviews_count():
 @router.get("/get-all-reviews-state", description="Rota para buscar a quantidade de reviews por estado")
 def reviews_by_state(state:str):
     return ReviewsController().filter_all_reviewers_by_state(state)
+
+@router.get("/top-4-states-reviews", description="Rota para buscar top 4 estados")
+def top_4_states_reviews():
+    return ReviewsController().get_top_4_states_by_review_count()
