@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 from modules.reviews import ReviewsController
 from schemas.schemas import ReviewInput
+from fastapi import Depends, HTTPException
+from db.db import get_db
+from sqlalchemy.orm import Session
 
 
 router = APIRouter()
@@ -30,6 +33,9 @@ def get_all_reviews_count():
 def reviews_by_state(state:str):
     return ReviewsController().filter_all_reviewers_by_state(state)
 
-@router.get("/top-4-states-reviews", description="Rota para buscar top 4 estados")
-def top_4_states_reviews():
-    return ReviewsController().get_top_4_states_by_review_count()
+@router.get("/get_top5_statesReviews", description="Route to fetch the top 5 states and their reviews count")
+def get_top5_states_reviews(db: Session = Depends(get_db)):
+    top_states_reviews = ReviewsController().get_top5_states_by_reviews(db)  # Corrigido o nome do método
+    if not top_states_reviews:
+        raise HTTPException(status_code=404, detail="Top 5 states not found")
+    return top_states_reviews

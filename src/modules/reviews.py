@@ -9,6 +9,9 @@ from models.products import Products
 from models.preprocessing_historics import PreprocessingHistorics
 from modules.preprocessing_historics import PreprocessingHistoricsController
 from sqlalchemy.sql import func
+from sqlalchemy.orm import Session
+from fastapi import Depends, HTTPException
+from db.db import get_db
 
 
 
@@ -145,35 +148,12 @@ class ReviewsController:
         finally:
             db.close()
 
-    def get_top_4_states_by_review_count():
-        try:
-            db = SessionLocal()
-            
-            # Query para contar reviews por estado
-            state_review_counts = db.query(
-                Reviewers.state,
-                func.count(Reviews.id).label('review_count')
-            ).join(
-                Reviews, Reviews.reviewer_id == Reviewers.id
-            ).group_by(
-                Reviewers.state
-            ).order_by(
-                func.count(Reviews.id).desc()
-            ).limit(4).all()
-            
-            if not state_review_counts:
-                raise HTTPException(status_code=404, detail="No reviews found")
-
-            top_states = [
-                {"state": state_review[0], "review_count": state_review[1]}
-                for state_review in state_review_counts
-            ]
-
-            return top_states
-
-        except Exception as e:
-            msg = f"[ERROR] - Fail to get top 4 states by review count from database, {str(e)}"
-            print(msg)
-            raise HTTPException(status_code=500, detail=msg)
-        finally:
-            db.close()
+    def get_top5_states_by_reviews(self, db: Session = Depends(get_db)):
+        top_states = db.query(Reviewers.state, func.count(Reviews.id).label('total_reviews')) \
+                    .join(Reviews, Reviewers.id == Reviews.reviewer_id) \
+                    .group_by(Reviewers.state) \
+                    .order_by(func.count(Reviews.id).desc()) \
+                    .limit(5) \
+                    .all()
+        top_states_reviews = [{"state": state, "total_reviews": total_reviews} for state, total_reviews in top_states]
+        return top_states_reviews
