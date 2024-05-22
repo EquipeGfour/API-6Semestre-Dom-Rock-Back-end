@@ -12,6 +12,7 @@ from models.process_data import Base
 from models.processing_errors import Base
 from models.categories import Base
 from models.subcategories import Base
+from models.training_model import Base
 
 config = Config()
 
