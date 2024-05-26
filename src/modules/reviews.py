@@ -8,6 +8,11 @@ from modules.reviewers import ReviewerController
 from models.products import Products
 from models.preprocessing_historics import PreprocessingHistorics
 from modules.preprocessing_historics import PreprocessingHistoricsController
+from sqlalchemy.sql import func
+from sqlalchemy.orm import Session
+from fastapi import Depends, HTTPException
+from db.db import get_db
+
 
 
 class ReviewsController:
@@ -142,3 +147,12 @@ class ReviewsController:
             raise HTTPException(status_code = 500, detail = msg)
         finally:
             db.close()
+
+    def get_states_and_reviews(self, db: Session = Depends(get_db)):
+        top_states = db.query(Reviewers.state, func.count(Reviews.id).label('total_reviews')) \
+                    .join(Reviews, Reviewers.id == Reviews.reviewer_id) \
+                    .group_by(Reviewers.state) \
+                    .order_by(func.count(Reviews.id).desc()) \
+                    .all()
+        top_states_reviews = [{"state": state, "total_reviews": total_reviews} for state, total_reviews in top_states]
+        return top_states_reviews
