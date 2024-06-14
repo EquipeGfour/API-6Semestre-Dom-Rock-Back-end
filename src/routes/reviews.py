@@ -33,9 +33,6 @@ def get_all_reviews_count():
 def reviews_by_state(state:str):
     return ReviewsController().filter_all_reviewers_by_state(state)
 
-@router.get("/get_states_and_reviews", description="Route to get states and their reviews count")
-def get_states_and_reviews(db: Session = Depends(get_db)):
-    top_states_reviews = ReviewsController().get_states_and_reviews(db)  # Corrigido o nome do método
-    if not top_states_reviews:
-        raise HTTPException(status_code=404, detail="State not found")
-    return top_states_reviews
+@router.get("/states_and_reviews", description="Route to fetch states and review counts, optionally filtered by product")
+def get_states_and_reviews(product_id: str = None, db: Session = Depends(get_db)):
+    return ReviewsController().get_states_and_reviews(db, product_id)
