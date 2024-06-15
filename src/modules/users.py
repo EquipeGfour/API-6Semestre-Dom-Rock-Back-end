@@ -22,8 +22,7 @@ class UsersController:
         new_user = Users(
             name=user_data.name,
             senha=user_data.senha,
-            email=user_data.email,
-            userAdmin=user_data.userAdmin  
+            email=user_data.email
         )
         db.add(new_user)
         db.commit()
